@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/file_listing.css">
+{% endblock %}
+
+{% block main %}
+<h1 class="page-header">File Listing</h1>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-success">
+      <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endwith %}
+
+<h2>Uploads</h2>
+<ul class="uploads">
+{% for jpg in jpgs %}
+  <li><img src='{{ url_for("static", filename="uploads/{}".format(jpg)) }}' alt='{{ upload }}'/></li>
+{% endfor %}
+{% for upload in uploads %}
+  <li><a href='{{ url_for("static", filename="uploads/{}".format(upload)) }}'>{{ upload }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

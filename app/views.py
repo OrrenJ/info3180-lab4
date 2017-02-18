@@ -61,6 +61,25 @@ def logout():
     flash('You were logged out')
     return redirect(url_for('home'))
 
+@app.route('/file_listing')
+def file_listing():
+    if not session.get('logged_in'):
+        abort(401)
+
+    rootdir = os.getcwd()
+    path = '/app/static/uploads'
+    print rootdir
+    jpgs = list()
+    uploads = list()
+    for subdir, dirs, files in os.walk(rootdir + path):
+        for file in files:
+            if file != '.gitkeep':
+                if file.endswith('.jpg') or file.endswith('.jpeg'):
+                    jpgs.append(file)
+                else:
+                    uploads.append(file)
+
+    return render_template('file_listings.html', path=path, jpgs=jpgs, uploads=uploads)
 
 ###
 # The functions below should be applicable to all Flask apps.
@@ -71,6 +90,13 @@ def send_text_file(file_name):
     """Send your static text file."""
     file_dot_text = file_name + '.txt'
     return app.send_static_file(file_dot_text)
+
+
+@app.route('/<file_name>.mp4')
+def send_mp4_file(file_name):
+    """Send your static text file."""
+    file_dot_mp4 = file_name + '.mp4'
+    return app.send_static_file(file_dot_mp4)
 
 
 @app.after_request
